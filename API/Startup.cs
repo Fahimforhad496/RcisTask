@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BLL;
 using DLL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +33,7 @@ namespace API
             services.AddControllers();
 
             DLLDependency.AllDependency(services, Configuration);
+            BLLDependency.AllDependency(services, Configuration);
 
 
 
