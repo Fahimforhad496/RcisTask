@@ -12,10 +12,9 @@ namespace DLL.Repositories
     {
         Task<Department> InsertDepartmentAsync(Department department);
         Task<List<Department>> GetAllAsync();
+        Task<Department> GetAsync(string code);
         Task<Department> UpdateAsync(string code, Department department);
         Task<Department> DeleteAsync(string code);
-        Task<Department> GetAsync(string code);
-
     }
 
     public class DepartmentRepository : IDepartmentRepository
