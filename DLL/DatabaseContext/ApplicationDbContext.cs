@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using DLL.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DLL.DatabaseContext
@@ -11,5 +12,8 @@ namespace DLL.DatabaseContext
         {
 
         }
+
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Student> Students { get; set; }
     }
 }
