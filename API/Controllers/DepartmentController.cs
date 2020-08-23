@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DLL.Models;
+using DLL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,13 @@ namespace API.Controllers
 
     public class DepartmentController : MainApiController
     {
+        private readonly IDepartmentRepository _departmentRepository;
+
+        public DepartmentController(IDepartmentRepository departmentRepository)
+        {
+            _departmentRepository = departmentRepository;
+        }
+
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -25,9 +33,9 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Insert(Department department)
+        public async Task<IActionResult> Insert(Department department)
         {
-            return Ok(DepartmentStatic.InsertDepartment(department));
+            return Ok(await _departmentRepository.InsertDepartment(department));
         }
 
         [HttpPut("{code}")]
