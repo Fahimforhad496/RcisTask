@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using DLL.Models;
 using DLL.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +44,35 @@ namespace DLL.DatabaseContext
                 }
             }
             base.OnModelCreating(modelBuilder);
+        }
+
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            OnBeforeSavingData();
+            return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+
+        private void OnBeforeSavingData()
+        {
+            var entries = ChangeTracker.Entries()
+                .Where(e => e.State != EntityState.Detached && e.State != EntityState.Unchanged);
+            foreach (var entry in entries)
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Deleted:
+                        entry.Property(IsDeletedProperty).CurrentValue = true;
+                        entry.State = EntityState.Modified;
+                        break;
+                }
+            }
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            OnBeforeSavingData();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
         public DbSet<Department> Departments { get; set; }
