@@ -22,10 +22,11 @@ namespace API.Controllers
             _departmentService = departmentService;
         }
 
+        
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public IActionResult GetAll()
         {
-            return Ok(await _departmentService.GetAllAsync());
+            return Ok(_departmentService.GetAllAsync());
 
         }
 

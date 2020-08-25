@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BLL.Request;
 using BLL.Services;
 using DLL.Models;
 using DLL.Repositories;
@@ -20,9 +21,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public IActionResult GetAll()
         {
-            return Ok(await _studentService.GetAllAsync());
+            return Ok(_studentService.GetAllAsync());
 
         }
 
@@ -33,9 +34,9 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Insert(Student student)
+        public async Task<IActionResult> Insert(StudentInsertRequestViewModel studentRequest)
         {
-            return Ok(await _studentService.InsertStudentAsync(student));
+            return Ok(await _studentService.InsertStudentAsync(studentRequest));
         }
 
         [HttpPut("{email}")]

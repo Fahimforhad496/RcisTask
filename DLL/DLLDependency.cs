@@ -13,13 +13,14 @@ namespace DLL
     {
         public static void AllDependency(IServiceCollection services, IConfiguration configuration)
         {
+            var mm = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             // Repository Dependency
-
-            services.AddTransient<IDepartmentRepository, DepartmentRepository>();
-            services.AddTransient<IStudentRepository, StudentRepository>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            //services.AddTransient<IDepartmentRepository, DepartmentRepository>();
+            //services.AddTransient<IStudentRepository, StudentRepository>();
         }
     }
 }
