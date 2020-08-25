@@ -29,9 +29,9 @@ namespace BLL.Request
                 .NotEmpty().MinimumLength(4).MaximumLength(50);
             RuleFor(x => x.Email).NotNull()
                 .NotEmpty().MinimumLength(3).EmailAddress().MustAsync(EmailExists)
-                .WithMessage("email exists in our system");
+                .WithMessage("This Email Already exists.");
             RuleFor(x => x.DepartmentId).GreaterThan(0).MustAsync(DepartmentExists)
-                .WithMessage("department not exists in our system");
+                .WithMessage("Department is not exist in this system.");
 
         }
 

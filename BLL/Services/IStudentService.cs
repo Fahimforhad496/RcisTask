@@ -38,6 +38,7 @@ namespace BLL.Services
             {
                 Email = studentRequest.Email,
                 Name = studentRequest.Name,
+                DepartmentId = studentRequest.DepartmentId
                 
                 
             };

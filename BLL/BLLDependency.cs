@@ -23,6 +23,10 @@ namespace BLL
         private static void AllFluentValidationDependency(IServiceCollection services)
         {
             services
+                .AddTransient<IValidator<StudentInsertRequestViewModel>, StudentInsertRequestViewModelValidator
+                >();
+
+            services
                 .AddTransient<IValidator<DepartmentInsertRequestViewModel>, DepartmentInsertRequestViewModelValidator
                 >();
         }
