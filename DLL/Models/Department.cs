@@ -14,5 +14,7 @@ namespace DLL.Models
         public string CreatedBy { get; set; }
         public DateTimeOffset LastUpdatedAt { get; set; }
         public string LastUpdatedBy { get; set; }
+
+        public ICollection<Student> Students { get; set; }
     }
 }
