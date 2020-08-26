@@ -7,6 +7,7 @@ using Bogus;
 using DLL.DatabaseContext;
 using DLL.Models;
 using DLL.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services
@@ -16,17 +17,20 @@ namespace BLL.Services
         Task InsertData();
         Task DummyData1();
         Task DummyData2();
+        Task AddNewRoles();
     }
 
     public class TestService : ITestService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ApplicationDbContext _context;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public TestService(IUnitOfWork unitOfWork, ApplicationDbContext context)
+        public TestService(IUnitOfWork unitOfWork, ApplicationDbContext context,RoleManager<IdentityRole> roleManager)
         {
             _unitOfWork = unitOfWork;
             _context = context;
+            _roleManager = roleManager;
         }
 
         
@@ -105,6 +109,29 @@ namespace BLL.Services
 
 
         }
-        
+
+        public async Task AddNewRoles()
+        {
+            var roleList = new List<string>()
+            {
+                "admin",
+                "manager",
+                "supervisor"
+
+            };
+
+            foreach (var role in roleList)
+            {
+                var exists = await _roleManager.FindByNameAsync(role);
+
+                if (exists == null)
+                {
+                    await _roleManager.CreateAsync(new IdentityRole()
+                    {
+                        Name = role
+                    });
+                }
+            }
+        }
     }
 }

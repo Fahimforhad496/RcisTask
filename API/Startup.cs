@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using API.Middlewares;
 using BLL;
 using DLL;
+using DLL.DatabaseContext;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,8 +38,7 @@ namespace API
             services.AddControllers().AddFluentValidation().AddNewtonsoftJson(
                 opt=>opt.SerializerSettings.ReferenceLoopHandling=ReferenceLoopHandling.Ignore);
 
-            DLLDependency.AllDependency(services, Configuration);
-            BLLDependency.AllDependency(services, Configuration);
+            
 
 
 
@@ -50,8 +51,16 @@ namespace API
                 // If the client hasn't specified the API version in the request, use the default API version number 
                 config.AssumeDefaultVersionWhenUnspecified = true;
             });
+            IdentitySetup(services);
+            DLLDependency.AllDependency(services, Configuration);
+            BLLDependency.AllDependency(services, Configuration);
 
 
+        }
+
+        private void IdentitySetup(IServiceCollection services)
+        {
+            services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
         }
 
         private void SetupSwagger(IServiceCollection services)
