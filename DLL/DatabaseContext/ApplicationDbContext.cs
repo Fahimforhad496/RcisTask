@@ -11,10 +11,11 @@ using DLL.Models.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DLL.DatabaseContext
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : DbContext
     {
         private const string IsDeletedProperty = "IsDeleted";
 
@@ -35,6 +36,7 @@ namespace DLL.DatabaseContext
             var lambda = Expression.Lambda(condition, parm);
             return lambda;
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
@@ -47,7 +49,7 @@ namespace DLL.DatabaseContext
             }
 
             modelBuilder.Entity<CourseStudent>()
-                .HasKey(bc => new { bc.CourseId, bc.StudentId });
+                .HasKey(bc => new {bc.CourseId, bc.StudentId});
             modelBuilder.Entity<CourseStudent>()
                 .HasOne(bc => bc.Course)
                 .WithMany(b => b.CourseStudents)
@@ -56,6 +58,22 @@ namespace DLL.DatabaseContext
                 .HasOne(bc => bc.Student)
                 .WithMany(c => c.CourseStudents)
                 .HasForeignKey(bc => bc.StudentId);
+
+            modelBuilder.Entity<AppUserRole>().HasKey(ur => new {ur.UserId, ur.RoleId});
+            modelBuilder.Entity<AppUser>(u =>
+            {
+                u.HasMany(e => e.AppUserRoles)
+                    .WithOne(e => e.User)
+                    .HasForeignKey(ur => ur.UserId)
+                    .IsRequired();
+            });
+            modelBuilder.Entity<AppRole>(u =>
+            {
+                u.HasMany(e => e.AppUserRoles)
+                    .WithOne(e => e.Role)
+                    .HasForeignKey(ur => ur.RoleId)
+                    .IsRequired();
+            });
             base.OnModelCreating(modelBuilder);
         }
 

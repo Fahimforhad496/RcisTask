@@ -18,19 +18,22 @@ namespace BLL.Services
         Task DummyData1();
         Task DummyData2();
         Task AddNewRoles();
+        Task AddNewUser();
     }
 
     public class TestService : ITestService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ApplicationDbContext _context;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<AppRole> _roleManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public TestService(IUnitOfWork unitOfWork, ApplicationDbContext context,RoleManager<IdentityRole> roleManager)
+        public TestService(IUnitOfWork unitOfWork, ApplicationDbContext context,RoleManager<AppRole> roleManager,UserManager<AppUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _context = context;
             _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         
@@ -126,10 +129,45 @@ namespace BLL.Services
 
                 if (exists == null)
                 {
-                    await _roleManager.CreateAsync(new IdentityRole()
+                    await _roleManager.CreateAsync(new AppRole()
                     {
                         Name = role
                     });
+                }
+            }
+        }
+
+        public async Task AddNewUser()
+        {
+            var userList = new List<AppUser>()
+            {
+                new AppUser()
+                {
+                    UserName = "fahim.forhad@hotmail.com",
+                    Email = "fahim.forhad@hotmail.com",
+                    FullName = "fahim forhad"
+                },
+                new AppUser()
+                {
+                    UserName = "fahimforhad496@gmail.com",
+                    Email = "fahimforhad496@gmail.com",
+                    FullName = "Forhad Fahim"
+                    
+                }
+            };
+
+            foreach (var user in userList)
+            {
+                var userExists = await _userManager.FindByEmailAsync(user.Email);
+                if (userExists==null)
+                {
+                    var insertedData = await _userManager.CreateAsync(user, password: "Fah1m!$,./");
+
+                    if (insertedData.Succeeded)
+                    {
+                        await _userManager.AddToRoleAsync(user, role: "admin");
+                    }
+
                 }
             }
         }

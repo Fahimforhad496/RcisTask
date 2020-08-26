@@ -6,6 +6,7 @@ using API.Middlewares;
 using BLL;
 using DLL;
 using DLL.DatabaseContext;
+using DLL.Models;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -60,7 +61,7 @@ namespace API
 
         private void IdentitySetup(IServiceCollection services)
         {
-            services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<AppUser,AppRole>().AddEntityFrameworkStores<ApplicationDbContext>();
         }
 
         private void SetupSwagger(IServiceCollection services)
