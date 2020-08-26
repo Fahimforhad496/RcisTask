@@ -31,10 +31,7 @@ namespace BLL.Services
 
         
 
-        public Task DummyData2()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public async Task InsertData()
         {
@@ -71,21 +68,43 @@ namespace BLL.Services
             await _context.SaveChangesAsync();
         }
 
-        /*
+        
         public async Task DummyData2()
         {
-            // var courseDummy = new Faker<Course>()
-            //     .RuleFor(o => o.Name, f => f.Name.FirstName())
-            //     .RuleFor(o => o.Code, f => f.Name.LastName())
-            //     .RuleFor(u => u.Credit, f => f.Random.Number(1, 10));
-            // var courseDummyList = courseDummy.Generate(50).ToList();
-            // await _context.Courses.AddRangeAsync(courseDummyList);
-            // await _context.SaveChangesAsync();
+            var courseDummy = new Faker<Course>()
+                 .RuleFor(o => o.Name, f => f.Name.FirstName())
+                 .RuleFor(o => o.Code, f => f.Name.LastName())
+                 .RuleFor(u => u.Credit, f => f.Random.Number(1, 10));
+             var courseDummyList = courseDummy.Generate(50).ToList();
+             await _context.Courses.AddRangeAsync(courseDummyList);
+             await _context.SaveChangesAsync();
+
+            var allStudentId = await _context.Students.Select(x => x.StudentId).ToListAsync();
+            var allCourseId = await _context.Courses.Select(x => x.CourseId).ToListAsync();
+            int count = 0;
+
+            foreach (var course in allCourseId)
+            {
+                var courseStudent = new List<CourseStudent>();
+                var students = allStudentId.Skip(count).Take(5);
+                foreach (var aStudent in students)
+                {
+                    courseStudent.Add(new CourseStudent()
+                    {
+                        CourseId = course,
+                        StudentId = aStudent
+                    });
+                }
+
+                await _context.CourseStudents.AddRangeAsync(courseStudent);
+                await _context.SaveChangesAsync();
+                count += 5;
+            }
 
 
-           
-            
+
+
         }
-        */
+        
     }
 }
