@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bogus;
 using DLL.DatabaseContext;
 using DLL.Models;
 using DLL.Repositories;
@@ -28,10 +29,7 @@ namespace BLL.Services
             _context = context;
         }
 
-        public Task DummyData1()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public Task DummyData2()
         {
@@ -56,16 +54,16 @@ namespace BLL.Services
 
             await _unitOfWork.SaveChangesAsync();
         }
-        /*
+        
         public async Task DummyData1()
         {
-            var StudentDummy = new Faker<Student>()
+            var studentDummy = new Faker<Student>()
                 .RuleFor(u => u.Name, (f, u) => f.Name.FullName())
                 .RuleFor(u => u.Email, (f, u) => f.Internet.Email(u.Name));
             var departmentDummy = new Faker<Department>()
                 .RuleFor(o => o.Name, f => f.Name.FirstName())
                 .RuleFor(o => o.Code, f => f.Name.LastName())
-                .RuleFor(u => u.Students, f => StudentDummy.Generate(50).ToList());
+                .RuleFor(u => u.Students, f => studentDummy.Generate(50).ToList());
 
             var departmentListWithStudent = departmentDummy.Generate(100).ToList();
             await _context.Departments.AddRangeAsync(departmentListWithStudent);
@@ -73,6 +71,7 @@ namespace BLL.Services
             await _context.SaveChangesAsync();
         }
 
+        /*
         public async Task DummyData2()
         {
             // var courseDummy = new Faker<Course>()

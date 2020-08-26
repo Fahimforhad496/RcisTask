@@ -20,8 +20,8 @@ namespace API.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Index()
-        {
-            //  await _testService.DummyData2();
+        { 
+            await _testService.DummyData1();
             return Ok("hello world");
         }
     }

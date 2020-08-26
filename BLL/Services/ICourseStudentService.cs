@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DLL.Models;
 using DLL.Repositories;
+using DLL.ResponseViewModel;
 using FluentValidation.Internal;
 using Utility.Exceptions;
 using Utility.Models;
@@ -14,7 +15,7 @@ namespace BLL.Services
     public interface ICourseStudentService
     {
         Task<ApiSuccessResponse> InsertCourseAsync(CourseAssignInsertViewModel request);
-        
+        Task<StudentCourseViewModel> CourseListAsync(int studentId);
     }
 
     public class CourseStudentService : ICourseStudentService
@@ -51,7 +52,10 @@ namespace BLL.Services
             }
             throw new ApplicationValidationException("Enrollment has some problems.");
         }
-       
-        
+
+        public async Task<StudentCourseViewModel> CourseListAsync(int studentId)
+        {
+            return await _unitOfWork.StudentRepository.GetSpecificStudentCourseListAsync(studentId);
+        }
     }
 }
