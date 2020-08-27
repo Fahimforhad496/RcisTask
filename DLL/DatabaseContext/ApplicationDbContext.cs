@@ -15,7 +15,15 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DLL.DatabaseContext
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
+    <
+        AppUser, AppRole, int,
+        IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>,
+        IdentityRoleClaim<int>, IdentityUserToken<int>
+    >
+
+    
+
     {
         private const string IsDeletedProperty = "IsDeleted";
 
@@ -121,6 +129,12 @@ namespace DLL.DatabaseContext
         public DbSet<Student> Students { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseStudent> CourseStudents { get; set; }
+
+        //For Concurrency
+        public DbSet<CustomerBalance> CustomerBalances { get; set; }
+        public DbSet<TransactionHistory> TransactionHistories { get; set; }
+
+        //End Concurrency
 
     }
 }
