@@ -24,18 +24,19 @@ namespace BLL.Services
         {
             var rand = new Random();
             var amount = rand.Next(1000);
-            var transaction= new TransactionHistory
+            var transaction= new TransactionHistory()
             {
             
                 Amount = amount
             };
-            var customer =
-                await _unitOfWork.CustomerBalanceRepository.
-                    FindSingleAsync(x => x.Email == "fahimforhad@gmail.com");
-            customer.Balance += amount;
+            
+            
             await _unitOfWork.TransactionHistoryRepository.CreateAsync(transaction);
-            _unitOfWork.CustomerBalanceRepository.Update(customer);
-            await _unitOfWork.SaveChangesAsync();
+
+            if ( await _unitOfWork.SaveChangesAsync())
+            {
+                await _unitOfWork.CustomerBalanceRepository.MustUpdateBalanceAsync("fahimforhad@gmail.com", amount);
+            };
 
         }
     }

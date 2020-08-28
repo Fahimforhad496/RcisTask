@@ -47,6 +47,7 @@ namespace DLL.DatabaseContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CustomerBalance>().Property(p => p.RowVersion).IsConcurrencyToken();
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
                 if (typeof(ISoftDeletable).IsAssignableFrom(entity.ClrType) == true)
