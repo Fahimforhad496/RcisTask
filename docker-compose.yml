@@ -1,0 +1,89 @@
+version: "3.8"
+services: 
+    myredis:
+        image: redis
+        container_name: myredis
+        ports: 
+           -  6379:6379
+        restart: always
+        networks: 
+           -  mytestproject
+    
+    myelastic:
+        image: elasticsearch:7.8.1
+        container_name: myelastic
+        ports: 
+           -  9200:9200
+           -  9300:9300
+        environment: 
+           -  discovery.type=single-node
+        networks: 
+           -  mytestproject
+    
+    mykibana:
+        image: kibana:7.8.1
+        container_name: mykibana
+        ports: 
+           - 5601:5601
+        links: 
+           - myelastic:elasticsearch
+        networks: 
+           - mytestproject
+    
+    mymongo:
+        image: mongo:latest
+        container_name: mymongo
+        ports: 
+           - 28017:27017
+        environment: 
+           - MONGO_INITDB_ROOT_USERNAME=admin
+           - MONGO_INITDB_ROOT_PASSWORD=admin123
+        networks: 
+           - mytestproject
+
+    mymysql:
+        image: percona:8.0
+        container_name: mymysql
+        ports: 
+           - 3306:3306
+        environment:
+           - MYSQL_ROOT_PASSWORD=admin123
+           - MYSQL_USER=fahim
+           - MYSQL_PASSWORD=admin123
+        networks: 
+           - mytestproject
+    
+    myadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: myadmin
+        ports: 
+           - 8080:80
+        links: 
+           - mymysql:db
+        environment: 
+           - MYSQL_ROOT_PASSWORD=admin123
+           - MYSQL_USER=fahim
+           - MYSQL_PASSWORD=admin123
+        networks: 
+           - mytestproject
+
+    myrabbit:
+        image: rabbitmq:3-management
+        container_name: myrabbit
+        ports: 
+           - 15672:15672
+           - 5672:5672
+        networks: 
+           - mytestproject
+
+networks: 
+    mytestproject:
+        driver: bridge
+
+
+
+
+        
+           
+
+        
